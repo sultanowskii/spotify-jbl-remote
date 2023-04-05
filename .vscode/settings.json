@@ -1,0 +1,11 @@
+{
+    "workbench.colorTheme": "Gruvbox Dark Hard",
+    "workbench.colorCustomizations": {
+        "[Gruvbox Dark Hard]": {
+            "editorInlayHint.typeBackground": "#3d3d3d",
+            "editorInlayHint.typeForeground": "#9e9e9e",
+            "editorInlayHint.parameterBackground": "#3d3d3d",
+            "editorInlayHint.parameterForeground": "#9e9e9e"
+        }
+    }
+}
