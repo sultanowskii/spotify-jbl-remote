@@ -5,7 +5,7 @@ Turn your JBL speaker into a remote for Spotify!
 Developed and tested with JBL GO nearby. Can't gurantee all JBL speakers support.
 
 ### TODO:
-- [ ] Autosearch for JBL input event dev file
+- [x] Autosearch for JBL input event dev file
 - [ ] Basic spotify support (pause/unpause/next track)
 - [ ] README
 - [ ] Build guide
