@@ -3,11 +3,20 @@ use std::io::Read;
 use spotify_jbl_remote::{
     input_event::{InputEvent, EventType, INPUT_EVENT_CHUNK_SIZE},
     errors::exit_with_error,
-    device::{find_jbl_device_input_file, open_event_file},
+    device::{
+        find_jbl_device_input_file,
+        get_input_device_list,
+        open_event_file,
+    },
 };
 
 fn main() {
-    let device_handler_filename = match find_jbl_device_input_file() {
+    let device_list = match get_input_device_list() {
+        Ok(l) => l,
+        Err(e) => exit_with_error(format!("Error occurred trying to open a /proc/bus/input/devices: {}", e).as_str()),
+    };
+
+    let device_handler_filename = match find_jbl_device_input_file(device_list) {
         Some(filename) => filename,
         None => exit_with_error("Unable to find a device input handler file."),
     };

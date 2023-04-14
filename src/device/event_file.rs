@@ -9,5 +9,5 @@ pub fn open_event_file(filename: &str) -> io::Result<File> {
     file_options.read(true);
     file_options.write(false);
 
-     file_options.open(["/dev/input/", filename].join(""))
+    file_options.open(["/dev/input/", filename].join(""))
 }
