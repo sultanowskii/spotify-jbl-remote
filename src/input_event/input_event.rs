@@ -4,6 +4,10 @@ use crate::errors::InvalidArgumentError;
 
 use super::{EventCode, EventType};
 
+// Input event size.
+pub const INPUT_EVENT_CHUNK_SIZE: usize = 24;
+
+// Linux input event structure.
 pub struct InputEvent {
     pub time: u64,
     pub dummy: u64, // idk + idc

@@ -1,5 +1,7 @@
 use std::fmt;
 
+// Event codes.
+// See https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/input-event-codes.h#n64
 #[derive(Debug, PartialEq)]
 pub enum EventCode {
     Default = 0,

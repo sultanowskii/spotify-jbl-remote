@@ -1,30 +1,28 @@
-use std::{fs::OpenOptions, io::Read};
+use std::io::Read;
 
-use spotify_jbl_remote::{input_event::{InputEvent, EventType}, errors::exit_with_error, device::find_jbl_device_input_file};
-
-const CHUNK_SIZE: usize = 24;
+use spotify_jbl_remote::{
+    input_event::{InputEvent, EventType, INPUT_EVENT_CHUNK_SIZE},
+    errors::exit_with_error,
+    device::{find_jbl_device_input_file, open_event_file},
+};
 
 fn main() {
-    let mut file_options = OpenOptions::new();
-    file_options.read(true);
-    file_options.write(false);
-
     let device_handler_filename = match find_jbl_device_input_file() {
         Some(filename) => filename,
         None => exit_with_error("Unable to find a device input handler file."),
     };
 
-    let mut file = match file_options.open(["/dev/input/".to_string(), device_handler_filename].join("")) {
+    let mut file = match open_event_file(&device_handler_filename) {
         Ok(f) => f,
         Err(e) => exit_with_error(format!("Error occurred trying to open a device file: {}", e).as_str())
     };
 
     loop {
-        let mut chunk = Vec::with_capacity(CHUNK_SIZE);
+        let mut chunk = Vec::with_capacity(INPUT_EVENT_CHUNK_SIZE);
 
-        match file.by_ref().take(CHUNK_SIZE as u64).read_to_end(&mut chunk) {
+        match file.by_ref().take(INPUT_EVENT_CHUNK_SIZE as u64).read_to_end(&mut chunk) {
             Ok(n) => {
-                if n != CHUNK_SIZE {
+                if n != INPUT_EVENT_CHUNK_SIZE {
                     eprintln!("Error occured parsing input chunk: Invalid chunk size read");
                     continue;
                 }

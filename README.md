@@ -6,7 +6,7 @@ Developed and tested with JBL GO nearby. Can't gurantee all JBL speakers support
 
 ### TODO:
 - [x] Autosearch for JBL input event dev file
-- [ ] Comments
+- [x] Comments
 - [ ] Basic spotify support (pause/unpause/next track)
 - [ ] README
 - [ ] Build guide

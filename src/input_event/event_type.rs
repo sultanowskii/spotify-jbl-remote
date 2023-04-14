@@ -1,5 +1,7 @@
 use std::fmt;
 
+// Event types.
+// See https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/input-event-codes.h#n34
 #[derive(Debug, PartialEq)]
 pub enum EventType {
     Syn = 0,

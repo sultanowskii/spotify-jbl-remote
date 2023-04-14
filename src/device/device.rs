@@ -2,11 +2,13 @@ use regex::Regex;
 
 use crate::errors::IncompleteBuilderError;
 
+// Device input event descriptor.
 pub struct Device {
     pub name: String,
     pub handler: String,
 }
 
+// Device input event descriptor builder.
 struct DeviceBuilder {
     name: Option<String>,
     handler: Option<String>,
@@ -56,6 +58,7 @@ impl DeviceBuilder {
 }
 
 impl Device {
+    // Create device descriptor from /proc/bus/input/devices-format string.
     pub fn from_proc_bus_input_devices_string(s: &str) -> Result<Self, IncompleteBuilderError> {
         let mut device_builder = DeviceBuilder::new();
 
@@ -84,7 +87,8 @@ impl Device {
         device_builder.build()
     }
 
-    pub fn extract_name_from_line(line: &str) -> Result<String, ()> {
+    // Extracts name from /proc/bus/input/devices-format string.
+    fn extract_name_from_line(line: &str) -> Result<String, ()> {
         // Rust regex don't support lookups soo yeah.
         if !line.starts_with("N: Name=\"") || !line.ends_with("\"") {
             return Err(());
@@ -93,7 +97,8 @@ impl Device {
         Ok(line[9..line.len() - 1].to_string())
     }
 
-    pub fn extract_handler_from_line(line: &str) -> Result<String, ()> {
+    // Extracts handler filename from /proc/bus/input/devices-format string.
+    fn extract_handler_from_line(line: &str) -> Result<String, ()> {
         // Rust regex don't support lookups soo yeah.
         if !line.starts_with("H: Handlers=") {
             return Err(());

@@ -3,6 +3,7 @@ use std::fs::read_to_string;
 use crate::errors::exit_with_error;
 use super::device::Device;
 
+// Get list of available input devices.
 fn get_input_device_list() -> Vec<Device> {
     let raw_content = match read_to_string("/proc/bus/input/devices") {
         Ok(f) => f,
@@ -23,6 +24,7 @@ fn get_input_device_list() -> Vec<Device> {
     input_device_list
 }
 
+// Find JBL GO device input file.
 pub fn find_jbl_device_input_file() -> Option<String> {
     for device in get_input_device_list() {
         if device.name.contains("JBL GO") {
