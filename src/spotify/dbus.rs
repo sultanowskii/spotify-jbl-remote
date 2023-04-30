@@ -10,9 +10,9 @@ use crate::input_event::{InputEvent, EventType, EventCode};
     default_path = "/org/mpris/MediaPlayer2"
 )]
 trait SpotifyPlayer {
-    fn play(&self) -> zbus::Result<String>;
-    fn pause(&self) -> zbus::Result<String>;
-    fn next(&self) -> zbus::Result<String>;
+    fn play(&self) -> zbus::Result<()>;
+    fn pause(&self) -> zbus::Result<()>;
+    fn next(&self) -> zbus::Result<()>;
 }
 
 // Spotify DBus communicator.
