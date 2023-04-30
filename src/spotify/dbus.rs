@@ -12,7 +12,9 @@ use crate::input_event::{InputEvent, EventType, EventCode};
 trait SpotifyPlayer {
     fn play(&self) -> zbus::Result<()>;
     fn pause(&self) -> zbus::Result<()>;
+    fn playpause(&self) -> zbus::Result<()>;
     fn next(&self) -> zbus::Result<()>;
+    fn previous(&self) -> zbus::Result<()>;
 }
 
 // Spotify DBus communicator.
@@ -44,9 +46,21 @@ impl<'a> SpotifyDBus<'a> {
         Ok(())
     }
 
-    // "Next" command
+    // "Play/Pause" command
+    pub fn playpause(&self) -> zbus::Result<()> {
+        self.proxy.playpause()?;
+        Ok(())
+    }
+
+    // "Next track" command
     pub fn next(&self) -> zbus::Result<()> {
         self.proxy.next()?;
+        Ok(())
+    }
+
+    // "Previous track" command
+    pub fn previous(&self) -> zbus::Result<()> {
+        self.proxy.previous()?;
         Ok(())
     }
 
