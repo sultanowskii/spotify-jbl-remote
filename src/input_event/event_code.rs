@@ -1,13 +1,14 @@
 use std::fmt;
 
 // Event codes.
-// See https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/input-event-codes.h#n64
+// Read https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/input-event-codes.h#n64
 #[derive(Debug, PartialEq)]
 pub enum EventCode {
-    Default = 0,
-    NextSong = 163,
-    PlayCD = 200,
-    PauseCD = 201,
+    Default,
+    NextSong,
+    PlayCD,
+    PauseCD,
+    Unused,
 }
 
 impl TryFrom<u16> for EventCode {
@@ -15,11 +16,11 @@ impl TryFrom<u16> for EventCode {
 
     fn try_from(value: u16) -> Result<Self, Self::Error> {
         match value {
-            x if x == 0 => Ok(EventCode::Default),
-            x if x == 163 => Ok(EventCode::NextSong),
-            x if x == 200 => Ok(EventCode::PlayCD),
-            x if x == 201 => Ok(EventCode::PauseCD),
-            _ => Err(()),
+            0 => Ok(EventCode::Default),
+            163 => Ok(EventCode::NextSong),
+            200 => Ok(EventCode::PlayCD),
+            201 => Ok(EventCode::PauseCD),
+            _ => Ok(EventCode::Unused),
         }
     }
 }

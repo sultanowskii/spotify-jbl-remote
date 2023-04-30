@@ -57,12 +57,21 @@ impl<'a> SpotifyDBus<'a> {
             return Ok(());
         }
 
+        match input_event.type_ {
+            EventType::Key => {},
+            EventType::Syn => return Ok(()),
+            EventType::Unused => return Ok(()),
+        };
+
         match input_event.code {
             EventCode::PlayCD => self.play(),
             EventCode::PauseCD => self.pause(),
             EventCode::NextSong => self.next(),
             EventCode::Default => Ok(()),
+            EventCode::Unused => return Ok(()),
         }?;
+
+        println!("{}", input_event);
 
         Ok(())
     }
