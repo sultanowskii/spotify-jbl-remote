@@ -5,6 +5,7 @@ use crate::input_event::{InputEvent, EventType, EventCode};
 
 // Spotify DBus proxy (zbus).
 #[dbus_proxy(
+    // default_service = "org.mpris.MediaPlayer2.firefox.instance728",
     default_service = "org.mpris.MediaPlayer2.spotify",
     interface = "org.mpris.MediaPlayer2.Player",
     default_path = "/org/mpris/MediaPlayer2"
