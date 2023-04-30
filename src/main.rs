@@ -11,6 +11,11 @@ use spotify_jbl_remote::{
 };
 
 fn main() {
+    let dbus = match spotify_jbl_remote::spotify::SpotifyDBus::new() {
+        Ok(d) => d,
+        Err(e) => exit_with_error(format!("goodbye: {}", e).as_str()),
+    };
+    
     let device_list = match get_input_device_list() {
         Ok(l) => l,
         Err(e) => exit_with_error(format!("Error occurred trying to open a /proc/bus/input/devices: {}", e).as_str()),

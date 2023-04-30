@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 regex = "1"
+zbus = "3.12.0"
