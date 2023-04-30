@@ -1,7 +1,7 @@
 use std::io::Read;
 
 use spotify_jbl_remote::{
-    input_event::{InputEvent, EventType, INPUT_EVENT_CHUNK_SIZE},
+    input_event::{InputEvent, INPUT_EVENT_CHUNK_SIZE},
     errors::exit_with_error,
     device::{
         find_jbl_device_input_file,
@@ -11,37 +11,72 @@ use spotify_jbl_remote::{
 };
 
 fn main() {
-    let dbus = match spotify_jbl_remote::spotify::SpotifyDBus::new() {
+    let spotify_dbus = match spotify_jbl_remote::spotify::SpotifyDBus::new() {
         Ok(d) => d,
-        Err(e) => exit_with_error(format!("goodbye: {}", e).as_str()),
+        Err(_) => {
+            exit_with_error(
+                "Can't connect to Spotify DBus. \
+                Please make sure Spotify and I are executed by the same user.",
+            );
+        }
     };
     
     let device_list = match get_input_device_list() {
         Ok(l) => l,
-        Err(e) => exit_with_error(format!("Error occurred trying to open a /proc/bus/input/devices: {}", e).as_str()),
+        Err(e) => {
+            exit_with_error(
+                format!(
+                    "Can't access /proc/bus/input/devices: {}",
+                    e,
+                ).as_str()
+            );
+        }
     };
 
     let device_handler_filename = match find_jbl_device_input_file(device_list) {
         Some(filename) => filename,
-        None => exit_with_error("Unable to find a device input handler file."),
+        None => {
+            exit_with_error(
+                "Can't find a device input handler file. \
+                Make sure your JBL speaker is connected.",
+            );
+        },
     };
 
-    let mut file = match open_event_file(&device_handler_filename) {
+    let file = match open_event_file(&device_handler_filename) {
         Ok(f) => f,
-        Err(e) => exit_with_error(format!("Error occurred trying to open a device file: {}", e).as_str())
+        Err(e) => {
+            exit_with_error(
+                format!(
+                    "Can't access JBL input event file. \
+                    Make sure you have permissions to read /dev/input/*. Error: {}",
+                    e,
+                ).as_str()
+            );
+        },
     };
+
+    let mut chunk = Vec::with_capacity(INPUT_EVENT_CHUNK_SIZE);
 
     loop {
-        let mut chunk = Vec::with_capacity(INPUT_EVENT_CHUNK_SIZE);
+        chunk.clear();
 
-        match file.by_ref().take(INPUT_EVENT_CHUNK_SIZE as u64).read_to_end(&mut chunk) {
+        match (&file).take(INPUT_EVENT_CHUNK_SIZE as u64).read_to_end(&mut chunk) {
             Ok(n) => {
                 if n != INPUT_EVENT_CHUNK_SIZE {
                     eprintln!("Error occured parsing input chunk: Invalid chunk size read");
                     continue;
                 }
             }
-            Err(e) => exit_with_error(format!("Looks like device is not available anymore (error while reading chunk: {})", e).as_str())
+            Err(e) => {
+                exit_with_error(
+                    format!(
+                        "Looks like device is not available anymore. Error: {}",
+                        e,
+                    )
+                    .as_str()
+                );
+            }
         };
 
         let input_event = match InputEvent::try_from(&chunk) {
@@ -52,11 +87,9 @@ fn main() {
             }
         };
 
-        // we want button to be unpressed + ignoring syn events
-        if input_event.type_ == EventType::Syn || input_event.value != 0 {
-            continue;
-        }
-
-        println!("ayo mr white");
+        match spotify_dbus.handle_input_event(input_event) {
+            Ok(_) => {},
+            Err(e) => eprintln!("Error occured during communication with Spotify DBus: {}", e),
+        };
     }
 }

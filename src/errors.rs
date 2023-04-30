@@ -4,7 +4,7 @@ use std::process;
 // Print error message and exit gracefully.
 pub fn exit_with_error(msg: &str) -> ! {
     eprintln!("{}", msg);
-    eprintln!("Aborting.");
+    eprintln!("Exiting...");
     process::exit(-1);
 }
 
@@ -20,7 +20,7 @@ impl fmt::Display for InvalidArgumentError {
 }
 
 // Incomplete builder error.
-// Used when builder failes to build an object because not all fields are filled.
+// Used when builder fails to build an object because not all fields are filled.
 #[derive(Debug)]
 pub struct IncompleteBuilderError;
 
