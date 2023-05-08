@@ -3,12 +3,14 @@ use regex::Regex;
 use crate::errors::IncompleteBuilderError;
 
 // Device input event descriptor.
+#[derive(Debug)]
 pub struct Device {
     pub name: String,
     pub handler: String,
 }
 
 // Device input event descriptor builder.
+#[derive(Debug)]
 struct DeviceBuilder {
     name: Option<String>,
     handler: Option<String>,

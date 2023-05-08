@@ -19,6 +19,7 @@ trait SpotifyPlayer {
 }
 
 // Spotify DBus communicator.
+#[derive(Debug)]
 pub struct SpotifyDBus<'a> {
     proxy: SpotifyPlayerProxyBlocking<'a>,
 }
@@ -62,32 +63,6 @@ impl<'a> SpotifyDBus<'a> {
     // "Previous track" command
     pub fn previous(&self) -> zbus::Result<()> {
         self.proxy.previous()?;
-        Ok(())
-    }
-
-    // Perform an action based on input event.
-    pub fn handle_input_event(&self, input_event: InputEvent) -> zbus::Result<()> {
-        // we want button to be unpressed + ignoring syn events
-        if input_event.type_ == EventType::Syn || input_event.value != 0 {
-            return Ok(());
-        }
-
-        match input_event.type_ {
-            EventType::Key => {},
-            EventType::Syn => return Ok(()),
-            EventType::Unused => return Ok(()),
-        };
-
-        match input_event.code {
-            EventCode::PlayCD => self.play(),
-            EventCode::PauseCD => self.pause(),
-            EventCode::NextSong => self.next(),
-            EventCode::Default => Ok(()),
-            EventCode::Unused => return Ok(()),
-        }?;
-
-        println!("{}", input_event);
-
         Ok(())
     }
 }
