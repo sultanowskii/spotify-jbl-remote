@@ -8,7 +8,7 @@ use spotify_jbl_remote::{
         get_input_device_list,
         open_event_file,
     },
-    spotify::{SpotifyDBus, EventHandler},
+    spotify::{SpotifyDBus, EventHandler, event_handler::{DefaultEventHandleDriver, EventHandleDriver}},
 };
 
 fn main() {
@@ -23,6 +23,8 @@ fn main() {
     };
     let event_handler = EventHandler { dbus: spotify_dbus };
     
+    let event_handle_driver = DefaultEventHandleDriver {};
+
     let device_list = match get_input_device_list() {
         Ok(l) => l,
         Err(e) => {
@@ -89,7 +91,7 @@ fn main() {
             }
         };
 
-        match event_handler.handle_input_event(&input_event) {
+        match event_handler.handle_input_event(&event_handle_driver, &input_event) {
             Ok(_) => {},
             Err(e) => eprintln!("Error occured during communication with Spotify DBus: {}", e),
         };

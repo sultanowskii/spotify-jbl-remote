@@ -8,7 +8,7 @@ pub enum EventCode {
     NextSong,
     PlayCD,
     PauseCD,
-    Unused,
+    Unused(u16),
 }
 
 impl TryFrom<u16> for EventCode {
@@ -20,7 +20,7 @@ impl TryFrom<u16> for EventCode {
             163 => Ok(EventCode::NextSong),
             200 => Ok(EventCode::PlayCD),
             201 => Ok(EventCode::PauseCD),
-            _ => Ok(EventCode::Unused),
+            n => Ok(EventCode::Unused(n)),
         }
     }
 }
