@@ -1,15 +1,6 @@
-use crate::input_event::{EventCode, EventType, InputEvent, event_code};
+use crate::input_event::{EventCode, EventType, InputEvent};
 
-use super::SpotifyDBus;
-
-pub enum Action {
-    Play,
-    Pause,
-    PlayPause,
-    NextSong,
-    Other(fn(&EventCode) -> ()),
-    Nothing,
-}
+use super::{SpotifyDBus, action::Action};
 
 // Event handler
 #[derive(Debug)]
