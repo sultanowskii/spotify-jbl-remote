@@ -1,5 +1,7 @@
 use std::io::Read;
 
+use clap::Parser;
+
 use spotify_jbl_remote::{
     input_event::{InputEvent, INPUT_EVENT_CHUNK_SIZE},
     errors::exit_with_error,
@@ -8,10 +10,43 @@ use spotify_jbl_remote::{
         get_input_device_list,
         open_event_file,
     },
-    spotify::{SpotifyDBus, EventHandler, event_handler::{DefaultEventHandleDriver, EventHandleDriver}},
+    spotify::{
+        SpotifyDBus,
+        EventHandler,
+        event_handle_driver::{
+            DriverName,
+        },
+    },
 };
 
+#[derive(Parser)]
+#[command(name = "spotify-jbl-remote")]
+#[command(author = "Artur S. t.me/sultanowskii")]
+#[command(version = "0.1")]
+struct Args {
+    #[arg(
+        short,
+        long,
+        value_name = "INPUT_EVENT_DRIVER",
+        default_value_t = DriverName::Default,
+        value_hint = clap::ValueHint::CommandString,
+        value_enum,
+        help = "Input event driver"
+    )]
+    driver: DriverName,
+
+    #[arg(
+        short,
+        long,
+        value_name = "POLL_MODE",
+        help = "To run forever, waiting for external device to connect",
+    )]
+    poll: bool,
+}
+
 fn main() {
+    let args = Args::parse();
+
     let spotify_dbus = match SpotifyDBus::new() {
         Ok(d) => d,
         Err(_) => {
@@ -23,7 +58,7 @@ fn main() {
     };
     let event_handler = EventHandler { dbus: spotify_dbus };
     
-    let event_handle_driver = DefaultEventHandleDriver {};
+    let event_handle_driver = args.driver.try_into_driver();
 
     let device_list = match get_input_device_list() {
         Ok(l) => l,
@@ -91,7 +126,7 @@ fn main() {
             }
         };
 
-        match event_handler.handle_input_event(&event_handle_driver, &input_event) {
+        match event_handler.handle_input_event(event_handle_driver.as_ref(), &input_event) {
             Ok(_) => {},
             Err(e) => eprintln!("Error occured during communication with Spotify DBus: {}", e),
         };

@@ -1,21 +1,18 @@
 use zbus::dbus_proxy;
 use zbus::blocking::Connection;
 
-use crate::input_event::{InputEvent, EventType, EventCode};
-
 // Spotify DBus proxy (zbus).
 #[dbus_proxy(
-    // default_service = "org.mpris.MediaPlayer2.firefox.instance728",
     default_service = "org.mpris.MediaPlayer2.spotify",
     interface = "org.mpris.MediaPlayer2.Player",
     default_path = "/org/mpris/MediaPlayer2"
 )]
 trait SpotifyPlayer {
-    fn play(&self) -> zbus::Result<()>;
-    fn pause(&self) -> zbus::Result<()>;
-    fn playpause(&self) -> zbus::Result<()>;
-    fn next(&self) -> zbus::Result<()>;
-    fn previous(&self) -> zbus::Result<()>;
+    fn Play(&self) -> zbus::Result<()>;
+    fn Pause(&self) -> zbus::Result<()>;
+    fn PlayPause(&self) -> zbus::Result<()>;
+    fn Next(&self) -> zbus::Result<()>;
+    fn Previous(&self) -> zbus::Result<()>;
 }
 
 // Spotify DBus communicator.
@@ -38,31 +35,31 @@ impl<'a> SpotifyDBus<'a> {
 
     // "Play" command
     pub fn play(&self) -> zbus::Result<()> {
-        self.proxy.play()?;
+        self.proxy.Play()?;
         Ok(())
     }
 
     // "Pause" command
     pub fn pause(&self) -> zbus::Result<()> {
-        self.proxy.pause()?;
+        self.proxy.Pause()?;
         Ok(())
     }
 
     // "Play/Pause" command
     pub fn playpause(&self) -> zbus::Result<()> {
-        self.proxy.playpause()?;
+        self.proxy.PlayPause()?;
         Ok(())
     }
 
     // "Next track" command
     pub fn next(&self) -> zbus::Result<()> {
-        self.proxy.next()?;
+        self.proxy.Next()?;
         Ok(())
     }
 
     // "Previous track" command
     pub fn previous(&self) -> zbus::Result<()> {
-        self.proxy.previous()?;
+        self.proxy.Previous()?;
         Ok(())
     }
 }
