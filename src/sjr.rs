@@ -28,7 +28,6 @@ macro_rules! exit_with_error_or_return {
     };
 }
 
-
 pub fn event_loop(args: &Args) {
     let poll_mode = args.poll;
     

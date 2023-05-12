@@ -10,6 +10,7 @@ Developed and tested with JBL GO nearby. Can't gurantee all JBL speakers support
 - [x] Basic spotify support (pause/unpause/next track)
 - [x] Option to use PlayPause interface instead of Play+Pause
 - [x] Poll mode
+- [ ] Way to run it in the background
 - [ ] README
 - [ ] Build guide
 - [ ] Usage guide
