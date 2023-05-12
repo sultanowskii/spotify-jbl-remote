@@ -1,7 +1,10 @@
 use std::io::Read;
 
 use crate::{
-    input_event::{InputEvent, INPUT_EVENT_CHUNK_SIZE},
+    input_event::{
+        InputEvent,
+        INPUT_EVENT_CHUNK_SIZE
+    },
     errors::exit_with_error,
     device::{
         find_jbl_device_input_file,
@@ -15,13 +18,27 @@ use crate::{
     args::Args,
 };
 
+macro_rules! exit_with_error_or_return {
+    ($message:expr, $poll:expr) => {
+        if $poll {
+            return;
+        } else {
+            exit_with_error($message);
+        }
+    };
+}
+
+
 pub fn event_loop(args: &Args) {
+    let poll_mode = args.poll;
+    
     let spotify_dbus = match SpotifyDBus::new() {
         Ok(d) => d,
         Err(_) => {
-            exit_with_error(
+            exit_with_error_or_return!(
                 "Can't connect to Spotify DBus. \
                 Please make sure Spotify and I are executed by the same user.",
+                poll_mode
             );
         }
     };
@@ -32,11 +49,12 @@ pub fn event_loop(args: &Args) {
     let device_list = match get_input_device_list() {
         Ok(l) => l,
         Err(e) => {
-            exit_with_error(
+            exit_with_error_or_return!(
                 format!(
                     "Can't access /proc/bus/input/devices: {}",
                     e,
-                ).as_str()
+                ).as_str(),
+                poll_mode
             );
         }
     };
@@ -44,9 +62,10 @@ pub fn event_loop(args: &Args) {
     let device_handler_filename = match find_jbl_device_input_file(device_list) {
         Some(filename) => filename,
         None => {
-            exit_with_error(
+            exit_with_error_or_return!(
                 "Can't find a device input handler file. \
                 Make sure your JBL speaker is connected.",
+                poll_mode
             );
         },
     };
@@ -54,12 +73,13 @@ pub fn event_loop(args: &Args) {
     let file = match open_event_file(&device_handler_filename) {
         Ok(f) => f,
         Err(e) => {
-            exit_with_error(
+            exit_with_error_or_return!(
                 format!(
                     "Can't access JBL input event file. \
                     Make sure you have permissions to read /dev/input/*. Error: {}",
                     e,
-                ).as_str()
+                ).as_str(),
+                poll_mode
             );
         },
     };
@@ -77,12 +97,13 @@ pub fn event_loop(args: &Args) {
                 }
             }
             Err(e) => {
-                exit_with_error(
+                exit_with_error_or_return!(
                     format!(
                         "Looks like device is not available anymore. Error: {}",
                         e,
                     )
-                    .as_str()
+                    .as_str(),
+                    poll_mode
                 );
             }
         };

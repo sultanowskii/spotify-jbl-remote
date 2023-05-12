@@ -7,5 +7,10 @@ use spotify_jbl_remote::{
 
 fn main() {
     let args = Args::parse();
-    event_loop(&args);
+    loop {
+        event_loop(&args);
+        if !args.poll {
+            break;
+        }
+    }
 }
