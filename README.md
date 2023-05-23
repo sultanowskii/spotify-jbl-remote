@@ -4,9 +4,11 @@ Turn your JBL speaker into a remote for Spotify!
 
 Developed and tested with JBL GO nearby. Can't gurantee all JBL speakers support.
 
+Sooner or later will be able to test it on JBL Clip 2.
+
 ## What the hell is this?
 
-This is a userspace "driver" for JBL GO to properly interact with Spotify Desktop on linux.
+This is a userspace "driver" for JBL to properly interact with Spotify Desktop on linux.
 
 ## Requirements
 

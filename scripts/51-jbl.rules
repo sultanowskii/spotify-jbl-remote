@@ -1,1 +1,1 @@
-SUBSYSTEM=="input", ATTRS{name}=="JBL GO*", MODE="0664", SYMLINK+="spotify-jbl"
+SUBSYSTEM=="input", ATTRS{name}=="JBL*", MODE="0664", SYMLINK+="spotify-jbl"

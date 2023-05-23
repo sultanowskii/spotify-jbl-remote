@@ -21,10 +21,10 @@ pub fn get_input_device_list() -> io::Result<Vec<Device>> {
     Ok(input_device_list)
 }
 
-// Find JBL GO device input file.
+// Find JBL device input file.
 pub fn find_jbl_input_device_file(devices: Vec<Device>) -> Option<String> {
     for device in devices {
-        if device.name.contains("JBL GO") {
+        if device.name.contains("JBL") {
             return Some(["/dev/input/", device.handler.as_str()].join(""));
         }
     }
