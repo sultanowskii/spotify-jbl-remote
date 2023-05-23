@@ -17,8 +17,17 @@ At some point I'll publish pre-built executables, but for now you have to build 
 ## Build
 
 ```bash
-$ cargo build --release
+$ make build
 $ ls target/release/spotify-jbl-remote
+```
+
+## Install (after build)
+
+1. Puts executable at /usr/bin/ so it is available all across system
+2. Adds udev rule for JBL (so you don't have to have asspain with privileges and groups).
+
+```bash
+$ sudo make install
 ```
 
 ## Usage
@@ -56,6 +65,7 @@ For now I can't find an ultimate solution that fits everyone. `supervisor` seems
 - [x] Poll mode
 - [ ] Way to run it in the background
 - [x] Build guide
-- [ ] Privileges setup guide
+- [x] Privileges setup guide
+- [ ] Invalid file proper handling
 - [x] Usage guide
 - [x] Other JBL models support

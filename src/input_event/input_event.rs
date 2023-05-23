@@ -2,7 +2,7 @@ use std::fmt;
 
 use chrono::{DateTime, NaiveDateTime, Utc, TimeZone};
 
-use crate::errors::InvalidArgumentError;
+use crate::errors::RawToObjectConversionError;
 
 use super::{EventCode, EventType};
 
@@ -19,15 +19,18 @@ pub struct InputEvent {
 }
 
 impl TryFrom<&Vec<u8>> for InputEvent {
-    type Error = InvalidArgumentError;
+    type Error = RawToObjectConversionError;
 
     fn try_from(bytes: &Vec<u8>) -> Result<Self, Self::Error> {
         if bytes.len() != 24 {
-            return Err(InvalidArgumentError {});
+            return Err(RawToObjectConversionError {});
         }
 
         let timestamp = i64::from_le_bytes(bytes[0..8].try_into().unwrap());
-        let date_time = NaiveDateTime::from_timestamp_opt(timestamp, 0).unwrap();
+        let date_time = match NaiveDateTime::from_timestamp_opt(timestamp, 0) {
+            Some(d) => d,
+            None => return Err(RawToObjectConversionError {})
+        };
         let utc_date_time: DateTime<Utc> = Utc.from_local_datetime(&date_time).unwrap();
 
         Ok(

@@ -7,7 +7,7 @@ use crate::{
     },
     errors::exit_with_error,
     device::{
-        find_jbl_device_input_file,
+        find_jbl_input_device_file,
         get_input_device_list,
         open_event_file,
     },
@@ -28,6 +28,42 @@ macro_rules! exit_with_error_or_return {
     };
 }
 
+// Get input device filename based on CLI arguments.
+fn get_input_device_filename(args: &Args) -> Result<String, String> {
+    // If filename is specified explicitly, use it
+    if args.input_device_filename.is_some() {
+        return Ok(args.input_device_filename.to_owned().unwrap());
+    }
+
+    // If udev is used, then simply use symlink.
+    if !args.no_udev {
+        return Ok(String::from("/dev/spotify-jbl"));
+    }
+
+    // If udev is not used, then find event filename
+    let device_list = match get_input_device_list() {
+        Ok(l) => l,
+        Err(e) => {
+            return Err(
+                format!(
+                    "Can't access /proc/bus/input/devices: {}",
+                    e,
+                )
+            );
+        }
+    };
+
+    return match find_jbl_input_device_file(device_list) {
+        Some(filename) => Ok(filename),
+        None => {
+            return Err(
+                "Can't find input device file. \
+                Make sure your JBL speaker is connected.".to_string(),
+            );
+        },
+    };
+}
+
 pub fn event_loop(args: &Args) {
     let poll_mode = args.poll;
     
@@ -45,37 +81,24 @@ pub fn event_loop(args: &Args) {
     
     let event_handle_driver = args.driver.try_into_driver();
 
-    let device_list = match get_input_device_list() {
-        Ok(l) => l,
-        Err(e) => {
+    let input_device_filename = match get_input_device_filename(args) {
+        Ok(f) => f,
+        Err(msg) => {
             exit_with_error_or_return!(
-                format!(
-                    "Can't access /proc/bus/input/devices: {}",
-                    e,
-                ).as_str(),
+                msg,
                 poll_mode
             );
         }
     };
 
-    let device_handler_filename = match find_jbl_device_input_file(device_list) {
-        Some(filename) => filename,
-        None => {
-            exit_with_error_or_return!(
-                "Can't find a device input handler file. \
-                Make sure your JBL speaker is connected.",
-                poll_mode
-            );
-        },
-    };
-
-    let file = match open_event_file(&device_handler_filename) {
+    let file = match open_event_file(&input_device_filename) {
         Ok(f) => f,
         Err(e) => {
             exit_with_error_or_return!(
                 format!(
-                    "Can't access JBL input event file. \
-                    Make sure you have permissions to read /dev/input/*. Error: {}",
+                    "Can't access JBL input event file ({}). \
+                    Make sure it exists and you have permissions to read it. Error: {}",
+                    &input_device_filename,
                     e,
                 ).as_str(),
                 poll_mode

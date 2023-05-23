@@ -1,6 +1,6 @@
 pub mod bus_input;
 pub use bus_input::{
-    find_jbl_device_input_file,
+    find_jbl_input_device_file,
     get_input_device_list,
 };
 

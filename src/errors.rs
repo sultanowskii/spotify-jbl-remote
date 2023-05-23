@@ -1,21 +1,32 @@
 use std::fmt;
+use std::fmt::Display;
 use std::process;
 
 // Print error message and exit gracefully.
-pub fn exit_with_error(msg: &str) -> ! {
+pub fn exit_with_error<T>(msg: T) -> ! where T: Display {
     eprintln!("{}", msg);
     eprintln!("Exiting...");
     process::exit(-1);
 }
 
-// Invalid argument error.
-// Used when invalid argunents are passed to function.
+// Raw-to-object conversion error.
 #[derive(Debug)]
-pub struct InvalidArgumentError;
+pub struct RawToObjectConversionError;
 
-impl fmt::Display for InvalidArgumentError {
+impl fmt::Display for RawToObjectConversionError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Invalid argument is passed.")
+        write!(f, "Conversion failed. Input device file might be broken.")
+    }
+}
+
+// Invalid raw data error.
+// Used when bytes-to-object conversion fails.
+#[derive(Debug)]
+pub struct InvalidRawDataError;
+
+impl fmt::Display for InvalidRawDataError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Invalid raw data was passed to transformer.")
     }
 }
 
