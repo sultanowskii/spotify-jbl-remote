@@ -48,7 +48,7 @@ Default event handle 'driver' mapping:
 
 There are other 'driver's available. Personally, I like `play-pause` most.
 
-# Background task (optional)
+## Background task (optional)
 
 get ready to sweat
 
