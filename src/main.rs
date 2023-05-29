@@ -17,6 +17,6 @@ fn main() {
         if !args.poll {
             break;
         }
-        sleep(Duration::from_secs(10));
+        sleep(Duration::from_secs(args.poll_timeout));
     }
 }
