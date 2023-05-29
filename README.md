@@ -4,7 +4,7 @@ Turn your JBL speaker into a remote for Spotify!
 
 Developed and tested with JBL GO nearby. Can't gurantee all JBL speakers support.
 
-Sooner or later will be able to test it on JBL Clip 2.
+Sooner or later will be able to test it with JBL Clip 2.
 
 ## What the hell is this?
 
@@ -23,9 +23,9 @@ $ make build
 $ ls target/release/spotify-jbl-remote
 ```
 
-## Install (after build)
+## Install (after build) - optional, I guess
 
-1. Puts executable at /usr/bin/ so it is available all across system
+1. Puts executable at /usr/bin/
 2. Adds udev rule for JBL (so you don't have to have asspain with privileges and groups).
 
 ```bash
@@ -39,23 +39,25 @@ $ sudo make install
    ```bash
    $ ./spotify-jbl-remote
    ```
-3. And now you can control spotify by **Action** button on your jbl speaker!
+3. And now you can control spotify with **Action** button on your JBL speaker!
 
 Default event handle 'driver' mapping:
 - Press #1: Play
 - Press #2: Pause
 - Double press: Next track
 
-There are other drivers available. Personally, I like `play-pause` most.
+There are other 'driver's available. Personally, I like `play-pause` most.
 
-## Background process/daemon when???
+# Background task (optional)
 
-For now I can't find an ultimate solution that fits everyone. `supervisor` seems like a good option, but it is not installed by default.
+get ready to sweat
+
+See [background task](background.md)
 
 ## Why?
 
 1. For some reason JBL GO's signals have no effect on spotify client on linux.
-2. Actually useful pet project.
+2. Actually useful pet project
 3. To learn Rust
 4. To learn more about input events in linux
 
@@ -65,7 +67,8 @@ For now I can't find an ultimate solution that fits everyone. `supervisor` seems
 - [x] Basic spotify support (pause/unpause/next track)
 - [x] Option to use PlayPause interface instead of Play+Pause
 - [x] Poll mode
-- [ ] Way to run it in the background
+- [x] Way to run it in the background
+- [ ] Timeout/optimization?
 - [x] Build guide
 - [x] Privileges setup guide
 - [ ] Invalid file proper handling
