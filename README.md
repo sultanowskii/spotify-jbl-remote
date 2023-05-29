@@ -35,7 +35,7 @@ $ sudo make install
 ## Usage
 
 1. Run Spotfiy Desktop
-2. Run `spotify-jbl-remote`:
+2. Run `spotify-jbl-remote` (skip this if you created background task - see below):
    ```bash
    $ ./spotify-jbl-remote
    ```
