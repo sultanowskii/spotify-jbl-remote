@@ -28,9 +28,9 @@ pub struct Args {
 
     #[arg(
         long,
-        default_value_t = 10,
+        default_value_t = 10000,
         value_name = "POLL_TIMEOUT",
-        help = "Poll mode timeout (seconds)",
+        help = "Poll mode timeout (milliseconds)",
     )]
     pub poll_timeout: u64,
 
