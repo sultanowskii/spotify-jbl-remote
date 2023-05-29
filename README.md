@@ -68,7 +68,7 @@ See [background task](background.md)
 - [x] Option to use PlayPause interface instead of Play+Pause
 - [x] Poll mode
 - [x] Way to run it in the background
-- [ ] Timeout/optimization?
+- [x] Poll timeout
 - [x] Build guide
 - [x] Privileges setup guide
 - [ ] Invalid file proper handling
