@@ -1,3 +1,8 @@
+use std::{
+    thread::sleep,
+    time::Duration,
+};
+
 use clap::Parser;
 
 use spotify_jbl_remote::{
@@ -12,5 +17,6 @@ fn main() {
         if !args.poll {
             break;
         }
+        sleep(Duration::from_secs(10));
     }
 }
