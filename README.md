@@ -26,7 +26,7 @@ $ ls target/release/spotify-jbl-remote
 ## Install (after build) - optional, I guess
 
 1. Puts executable at /usr/bin/
-2. Adds udev rule for JBL (so you don't have to have asspain with privileges and groups).
+2. Adds udev rule for JBL (so you don't have to have mess with privileges and groups).
 
 ```bash
 $ sudo make install
@@ -39,7 +39,7 @@ $ sudo make install
    ```bash
    $ ./spotify-jbl-remote
    ```
-3. And now you can control spotify with **Action** button on your JBL speaker!
+3. Now you can control spotify with **Action** button on your JBL speaker!
 
 Default event handle 'driver' mapping:
 - Press #1: Play
